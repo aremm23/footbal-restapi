@@ -35,11 +35,15 @@ public class PlayerService {
     }
 
     public Player findById(Long id) {
-        return playerRepository.findById(id).orElseThrow(DataNotFoundedException::new);
+        return playerRepository.findById(id).orElseThrow(() ->
+                new DataNotFoundedException("Player with id" + id +" not founded")
+        );
     }
 
     public Player findByName(String name) {
-        return playerRepository.findByName(name).orElseThrow(DataNotFoundedException::new);
+        return playerRepository.findByName(name).orElseThrow(() ->
+                new DataNotFoundedException("Player with name" + name +" not founded")
+        );
     }
 
     public List<Player> findByNames(List<String> playersNames) {

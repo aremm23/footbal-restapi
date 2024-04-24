@@ -37,12 +37,12 @@ public class MyUserService {
     }
 
     public MyUser findById(Long id) {
-        return myUserRepository.findById(id).orElseThrow(DataNotFoundedException::new);
+        return myUserRepository.findById(id).orElseThrow(() -> new DataNotFoundedException("User mot founded"));
     }
 
     @Transactional
     public MyUser findByName(String name) {
-        return myUserRepository.findByUsername(name).orElseThrow(DataNotFoundedException::new);
+        return myUserRepository.findByUsername(name).orElseThrow(() -> new DataNotFoundedException("User mot founded"));
     }
 
 }

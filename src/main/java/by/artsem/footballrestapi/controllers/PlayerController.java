@@ -3,9 +3,8 @@ package by.artsem.footballrestapi.controllers;
 import by.artsem.footballrestapi.dto.PlayerDTO;
 import by.artsem.footballrestapi.dto.mappers.PlayerMapper;
 import by.artsem.footballrestapi.models.Player;
-import by.artsem.footballrestapi.repository.PlayerRepository;
 import by.artsem.footballrestapi.services.PlayerService;
-import by.artsem.footballrestapi.util.DataErrorResponse;
+import by.artsem.footballrestapi.util.ErrorResponse;
 import by.artsem.footballrestapi.util.DataNotCreatedException;
 import by.artsem.footballrestapi.util.DataNotFoundedException;
 import jakarta.validation.Valid;
@@ -50,22 +49,6 @@ public class PlayerController {
         }
         playerService.savePlayer(player);
         return ResponseEntity.ok(HttpStatus.OK);
-    }
-
-    @ExceptionHandler
-    private ResponseEntity<DataErrorResponse> handlerException(DataNotFoundedException e) {
-        DataErrorResponse dataErrorResponse = new DataErrorResponse(
-                "club not found",
-                System.currentTimeMillis());
-        return new ResponseEntity<>(dataErrorResponse, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler
-    private ResponseEntity<DataErrorResponse> handlerException(DataNotCreatedException e) {
-        DataErrorResponse dataErrorResponse = new DataErrorResponse(
-                e.getMessage(),
-                System.currentTimeMillis());
-        return new ResponseEntity<>(dataErrorResponse, HttpStatus.BAD_REQUEST);
     }
 
     private String createErrMessage(BindingResult bindingResult) {

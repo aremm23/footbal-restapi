@@ -3,11 +3,8 @@ package by.artsem.footballrestapi.controllers;
 
 import by.artsem.footballrestapi.dto.BrandDTO;
 import by.artsem.footballrestapi.dto.mappers.BrandMapper;
-import by.artsem.footballrestapi.models.Brand;
 import by.artsem.footballrestapi.services.BrandService;
-import by.artsem.footballrestapi.util.DataErrorResponse;
 import by.artsem.footballrestapi.util.DataNotCreatedException;
-import by.artsem.footballrestapi.util.DataNotFoundedException;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -63,29 +60,5 @@ public class BrandController {
                         .append(";");
             }
             return errorMsg.toString();
-    }
-
-    @ExceptionHandler
-    private ResponseEntity<DataErrorResponse> handlerException(DataNotFoundedException e) {
-        DataErrorResponse dataErrorResponse = new DataErrorResponse(
-                "club not found",
-                System.currentTimeMillis());
-        return new ResponseEntity<>(dataErrorResponse, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler
-    private ResponseEntity<DataErrorResponse> handlerException(DataNotCreatedException e) {
-        DataErrorResponse dataErrorResponse = new DataErrorResponse(
-                e.getMessage(),
-                System.currentTimeMillis());
-        return new ResponseEntity<>(dataErrorResponse, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler
-    private ResponseEntity<DataErrorResponse> handlerException(NullPointerException e) {
-        DataErrorResponse dataErrorResponse = new DataErrorResponse(
-                e.getMessage(),
-                System.currentTimeMillis());
-        return new ResponseEntity<>(dataErrorResponse, HttpStatus.BAD_REQUEST);
     }
 }

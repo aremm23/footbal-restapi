@@ -34,10 +34,14 @@ public class ClubService {
     }
 
     public Club findById(Long id) {
-        return clubRepository.findById(id).orElseThrow(DataNotFoundedException::new);
+        return clubRepository.findById(id).orElseThrow(() ->
+                new DataNotFoundedException("Club with id" + id +" not founded")
+        );
     }
 
     public Club findByName(String name) {
-        return clubRepository.findByName(name).orElseThrow(DataNotFoundedException::new);
+        return clubRepository.findByName(name).orElseThrow(() ->
+                new DataNotFoundedException("Club with name" + name +" not founded")
+        );
     }
 }

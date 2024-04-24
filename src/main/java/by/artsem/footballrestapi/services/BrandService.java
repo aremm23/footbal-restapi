@@ -36,11 +36,15 @@ public class BrandService {
     }
 
     public Brand findById(Long id) {
-        return brandRepository.findById(id).orElseThrow(DataNotFoundedException::new);
+        return brandRepository.findById(id).orElseThrow(() ->
+                new DataNotFoundedException("Brand with id" + id +" not founded")
+        );
     }
 
     public Brand findByName(String name) {
-        return brandRepository.findByName(name).orElseThrow(DataNotFoundedException::new);
+        return brandRepository.findByName(name).orElseThrow(() ->
+                new DataNotFoundedException("Brand with name" + name +" not founded")
+        );
     }
 
     public List<Brand> findByNames(List<String> brandNames) {

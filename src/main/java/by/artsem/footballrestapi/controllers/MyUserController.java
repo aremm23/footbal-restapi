@@ -5,7 +5,7 @@ import by.artsem.footballrestapi.dto.MyUserResponseDTO;
 import by.artsem.footballrestapi.dto.mappers.MyUserMapper;
 import by.artsem.footballrestapi.models.MyUser;
 import by.artsem.footballrestapi.services.MyUserService;
-import by.artsem.footballrestapi.util.DataErrorResponse;
+import by.artsem.footballrestapi.util.ErrorResponse;
 import by.artsem.footballrestapi.util.DataNotCreatedException;
 import by.artsem.footballrestapi.util.DataNotFoundedException;
 import jakarta.validation.Valid;
@@ -53,22 +53,6 @@ public class MyUserController {
         }
         myUserService.saveUser(myUserMapper.mapFromDTO(userDTO));
         return ResponseEntity.ok(HttpStatus.OK);
-    }
-
-    @ExceptionHandler
-    private ResponseEntity<DataErrorResponse> handlerException(DataNotFoundedException e) {
-        DataErrorResponse dataErrorResponse = new DataErrorResponse(
-                "user not found",
-                System.currentTimeMillis());
-        return new ResponseEntity<>(dataErrorResponse, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler
-    private ResponseEntity<DataErrorResponse> handlerException(DataNotCreatedException e) {
-        DataErrorResponse dataErrorResponse = new DataErrorResponse(
-                e.getMessage(),
-                System.currentTimeMillis());
-        return new ResponseEntity<>(dataErrorResponse, HttpStatus.BAD_REQUEST);
     }
 
     private String createErrMessage(BindingResult bindingResult) {
