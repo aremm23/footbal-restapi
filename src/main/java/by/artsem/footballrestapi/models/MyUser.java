@@ -1,0 +1,43 @@
+package by.artsem.footballrestapi.models;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.scheduling.support.SimpleTriggerContext;
+
+import java.time.LocalDateTime;
+import java.util.Date;
+
+@Entity
+@Data
+@Table(name = "user")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class MyUser {
+    @Id
+    @SequenceGenerator(name = "userIdSeqGen", sequenceName = "user_id_seq", allocationSize = 1)
+    @GeneratedValue(generator = "userIdSeqGen")
+    private Long id;
+
+    @Column(name = "password")
+    private String password;
+
+    @Column(name = "username")
+    private String username;
+
+    @Column(name = "created_at")
+    private LocalDateTime created;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updated;
+
+    @Column(name = "created_who")
+    private String createdWho;
+
+    @Column(name = "role")
+    private String role;
+
+}
