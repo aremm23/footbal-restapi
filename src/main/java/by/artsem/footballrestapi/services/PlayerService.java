@@ -19,26 +19,30 @@ public class PlayerService {
         this.playerRepository = playerRepository;
     }
 
+    @Transactional
     public void savePlayer(Player player) {
+        player.getBrands().forEach(brand -> brand.addPlayer(player));
         playerRepository.save(player);
     }
 
+    @Transactional
     public void removePlayer(Player player) {
         playerRepository.delete(player);
     }
 
-    @Transactional
     public List<Player> getPlayers() {
         return playerRepository.findAll();
     }
 
-    @Transactional
     public Player findById(Long id) {
         return playerRepository.findById(id).orElseThrow(DataNotFoundedException::new);
     }
 
-    @Transactional
     public Player findByName(String name) {
         return playerRepository.findByName(name).orElseThrow(DataNotFoundedException::new);
+    }
+
+    public List<Player> findByNames(List<String> playersNames) {
+        return playersNames.stream().map(playerStr -> playerRepository.findByName(playerStr).orElse(null)).toList();
     }
 }

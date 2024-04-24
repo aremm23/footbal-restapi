@@ -1,8 +1,10 @@
 package by.artsem.footballrestapi.dto;
 
 import jakarta.validation.constraints.NotEmpty;
+import lombok.Data;
 
-public class MyUserDTO {
+@Data
+public class MyUserRequestDTO {
     @NotEmpty(message = "Password ought to be not empty")
     private String password;
     @NotEmpty(message = "Username ought to be not empty")

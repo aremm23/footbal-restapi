@@ -1,6 +1,9 @@
 package by.artsem.footballrestapi.controllers;
 
+import by.artsem.footballrestapi.dto.PlayerDTO;
+import by.artsem.footballrestapi.dto.mappers.PlayerMapper;
 import by.artsem.footballrestapi.models.Player;
+import by.artsem.footballrestapi.repository.PlayerRepository;
 import by.artsem.footballrestapi.services.PlayerService;
 import by.artsem.footballrestapi.util.DataErrorResponse;
 import by.artsem.footballrestapi.util.DataNotCreatedException;
@@ -14,26 +17,30 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
 @RequestMapping("/player")
 public class PlayerController {
     private PlayerService playerService;
+    private PlayerMapper playerMapper;
 
     @GetMapping("/get-name/{name}")
-    public Player findById(@PathVariable("name") String name) {
-        return playerService.findByName(name);
+    public ResponseEntity<PlayerDTO> findById(@PathVariable("name") String name) {
+        return ResponseEntity.ok(playerMapper.mapToDTO(playerService.findByName(name)));
     }
 
     @GetMapping("/get-all")
-    public List<Player> test() {
-        return playerService.getPlayers();
+    public ResponseEntity<List<PlayerDTO>> findAll() {
+        return ResponseEntity.ok(
+                playerService.getPlayers().stream().map(playerMapper::mapToDTO).collect(Collectors.toList())
+        );
     }
 
     @GetMapping("/get-id/{id}")
-    public Player findById(@PathVariable("id") Long id) {
-        return playerService.findById(id);
+    public ResponseEntity<PlayerDTO> findById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(playerMapper.mapToDTO(playerService.findById(id)));
     }
 
     @PostMapping("/new")

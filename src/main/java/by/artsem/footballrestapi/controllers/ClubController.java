@@ -1,5 +1,7 @@
 package by.artsem.footballrestapi.controllers;
 
+import by.artsem.footballrestapi.dto.ClubDTO;
+import by.artsem.footballrestapi.dto.mappers.ClubMapper;
 import by.artsem.footballrestapi.models.Club;
 import by.artsem.footballrestapi.services.ClubService;
 import by.artsem.footballrestapi.util.DataErrorResponse;
@@ -14,6 +16,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
@@ -22,28 +25,29 @@ public class ClubController {
 
     private ClubService clubService;
 
+    private ClubMapper clubMapper;
+
     @GetMapping("/get-name/{name}")
-    public Club findById(@PathVariable("name") String name) {
-        Club club = clubService.findByName(name);
-        return club;
+    public ResponseEntity<ClubDTO> findById(@PathVariable("name") String name) {
+        return ResponseEntity.ok(clubMapper.mapToDTO(clubService.findByName(name)));
     }
 
     @GetMapping("/get-all")
-    public List<Club> test() {
-        return clubService.getClubs();
+    public ResponseEntity<List<ClubDTO>> test() {
+        return ResponseEntity.ok(clubService.getClubs().stream().map(clubMapper::mapToDTO).collect(Collectors.toList()));
     }
 
     @GetMapping("/get-id/{id}")
-    public Club findById(@PathVariable("id") Long id) {
-        return clubService.findById(id);
+    public ResponseEntity<ClubDTO> findById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(clubMapper.mapToDTO(clubService.findById(id)));
     }
 
     @PostMapping("/new")
-    public ResponseEntity<HttpStatus> create(@RequestBody @Valid Club club, BindingResult bindingResult) {
+    public ResponseEntity<HttpStatus> create(@RequestBody @Valid ClubDTO clubDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new DataNotCreatedException(createErrMessage(bindingResult));
         }
-        clubService.saveClub(club);
+        clubService.saveClub(clubMapper.mapFromDTO(clubDto));
         return ResponseEntity.ok(HttpStatus.OK);
     }
 

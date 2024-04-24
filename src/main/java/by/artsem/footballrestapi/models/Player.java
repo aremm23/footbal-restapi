@@ -1,7 +1,8 @@
 package by.artsem.footballrestapi.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,11 +28,11 @@ public class Player {
     @Column(name = "name")
     private String name;
 
-    @NotEmpty(message = "Player price should not be empty")
+    @Min(value = 0, message = "Price can't be less then 0 millions euro")
+    @Max(value = 500, message = "Price can't be more then 500 millions euro")
     @Column(name = "price")
     private Integer price;
 
-    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "club_id")
     private Club club;
@@ -44,13 +45,8 @@ public class Player {
     )
     private List<Brand> brands;
 
-    public Player(String name, Club club) {
-        this.name = name;
-        this.club = club;
-    }
-
     public void addBrand(Brand brand) {
-        if(brands == null) {
+        if (brands == null) {
             brands = new ArrayList<>();
         }
         brands.add(brand);

@@ -1,6 +1,8 @@
 package by.artsem.footballrestapi.controllers;
 
 
+import by.artsem.footballrestapi.dto.BrandDTO;
+import by.artsem.footballrestapi.dto.mappers.BrandMapper;
 import by.artsem.footballrestapi.models.Brand;
 import by.artsem.footballrestapi.services.BrandService;
 import by.artsem.footballrestapi.util.DataErrorResponse;
@@ -15,6 +17,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
@@ -22,28 +25,31 @@ import java.util.List;
 public class BrandController {
 
     private BrandService brandService;
+    private BrandMapper brandMapper;
 
     @GetMapping("/get-all")
-    public List<Brand> test() {
-        return brandService.getBrands();
+    public ResponseEntity<List<BrandDTO>> findAll() {
+        return ResponseEntity.ok(
+                brandService.getBrands().stream().map(brandMapper::mapToDTO).collect(Collectors.toList())
+        );
     }
 
     @GetMapping("/get-id/{id}")
-    public Brand findById(@PathVariable("id") Long id) {
-        return brandService.findById(id);
+    public ResponseEntity<BrandDTO> findById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(brandMapper.mapToDTO(brandService.findById(id)));
     }
 
     @GetMapping("/get-name/{name}")
-    public Brand findById(@PathVariable("name") String name) {
-        return brandService.findByName(name);
+    public ResponseEntity<BrandDTO> findById(@PathVariable("name") String name) {
+        return ResponseEntity.ok(brandMapper.mapToDTO(brandService.findByName(name)));
     }
 
     @PostMapping("/new")
-    public ResponseEntity<HttpStatus> create(@RequestBody @Valid Brand brand, BindingResult bindingResult) {
+    public ResponseEntity<HttpStatus> create(@RequestBody @Valid BrandDTO brandDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new DataNotCreatedException(createErrMessage(bindingResult));
         }
-        brandService.saveBrand(brand);
+        brandService.saveBrand(brandMapper.mapFromDTO(brandDto));
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
@@ -75,5 +81,11 @@ public class BrandController {
         return new ResponseEntity<>(dataErrorResponse, HttpStatus.BAD_REQUEST);
     }
 
-
+    @ExceptionHandler
+    private ResponseEntity<DataErrorResponse> handlerException(NullPointerException e) {
+        DataErrorResponse dataErrorResponse = new DataErrorResponse(
+                e.getMessage(),
+                System.currentTimeMillis());
+        return new ResponseEntity<>(dataErrorResponse, HttpStatus.BAD_REQUEST);
+    }
 }

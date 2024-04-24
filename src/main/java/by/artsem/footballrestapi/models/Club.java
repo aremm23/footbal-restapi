@@ -1,7 +1,6 @@
 package by.artsem.footballrestapi.models;
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
@@ -26,16 +25,11 @@ public class Club {
     @Column(name = "name")
     private String name;
 
-    //@JsonBackReference
     @OneToMany(mappedBy = "club")
     private List<Player> players;
 
-    public Club(String name) {
-        this.name = name;
-    }
-
     public void addPlayer(Player player) {
-        if(players == null) {
+        if (players == null) {
             players = new ArrayList<>();
         }
         players.add(player);

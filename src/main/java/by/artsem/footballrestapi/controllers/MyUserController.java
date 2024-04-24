@@ -1,8 +1,9 @@
 package by.artsem.footballrestapi.controllers;
 
-import by.artsem.footballrestapi.dto.MyUserDTO;
+import by.artsem.footballrestapi.dto.MyUserRequestDTO;
+import by.artsem.footballrestapi.dto.MyUserResponseDTO;
+import by.artsem.footballrestapi.dto.mappers.MyUserMapper;
 import by.artsem.footballrestapi.models.MyUser;
-import by.artsem.footballrestapi.models.Player;
 import by.artsem.footballrestapi.services.MyUserService;
 import by.artsem.footballrestapi.util.DataErrorResponse;
 import by.artsem.footballrestapi.util.DataNotCreatedException;
@@ -16,34 +17,41 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
 @RequestMapping("/user")
 public class MyUserController {
     private MyUserService myUserService;
+    private MyUserMapper myUserMapper;
 
     @GetMapping("/get-username/{username}")
-    public MyUser findById(@PathVariable("username") String username) {
-        return myUserService.findByName(username);
+    public ResponseEntity<MyUserResponseDTO> findById(@PathVariable("username") String username) {
+        MyUser myUser = myUserService.findByName(username);
+        return ResponseEntity.ok(myUserMapper.mapToDTO(myUser));
     }
 
     @GetMapping("/get-all")
-    public List<MyUser> findAll() {
-        return myUserService.findUsers();
+    public ResponseEntity<List<MyUserResponseDTO>> findAll() {
+        List<MyUser> users = myUserService.findUsers();
+        List<MyUserResponseDTO> dtos = users.stream()
+                .map(myUserMapper::mapToDTO)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(dtos);
     }
 
     @GetMapping("/get-id/{id}")
-    public MyUser findById(@PathVariable("id") Long id) {
-        return myUserService.findById(id);
+    public ResponseEntity<MyUser> findById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(myUserService.findById(id));
     }
 
     @PostMapping("/new")
-    public ResponseEntity<HttpStatus> create(@RequestBody @Valid MyUser user, BindingResult bindingResult) {
+    public ResponseEntity<HttpStatus> create(@RequestBody @Valid MyUserRequestDTO userDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new DataNotCreatedException(createErrMessage(bindingResult));
         }
-        myUserService.saveUser(user);
+        myUserService.saveUser(myUserMapper.mapFromDTO(userDTO));
         return ResponseEntity.ok(HttpStatus.OK);
     }
 

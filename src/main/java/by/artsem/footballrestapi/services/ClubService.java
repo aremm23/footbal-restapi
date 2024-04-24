@@ -37,7 +37,6 @@ public class ClubService {
         return clubRepository.findById(id).orElseThrow(DataNotFoundedException::new);
     }
 
-    @Transactional
     public Club findByName(String name) {
         return clubRepository.findByName(name).orElseThrow(DataNotFoundedException::new);
     }

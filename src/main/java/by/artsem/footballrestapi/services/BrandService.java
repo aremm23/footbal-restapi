@@ -22,6 +22,7 @@ public class BrandService {
 
     @Transactional
     public void saveBrand(Brand brand) {
+        brand.getPlayers().forEach(player -> player.addBrand(brand));
         brandRepository.save(brand);
     }
 
@@ -38,8 +39,11 @@ public class BrandService {
         return brandRepository.findById(id).orElseThrow(DataNotFoundedException::new);
     }
 
-    @Transactional
     public Brand findByName(String name) {
         return brandRepository.findByName(name).orElseThrow(DataNotFoundedException::new);
+    }
+
+    public List<Brand> findByNames(List<String> brandNames) {
+        return brandNames.stream().map(brandStr -> brandRepository.findByName(brandStr).orElse(null)).toList();
     }
 }
