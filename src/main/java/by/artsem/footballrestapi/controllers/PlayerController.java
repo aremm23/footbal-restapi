@@ -1,12 +1,11 @@
 package by.artsem.footballrestapi.controllers;
 
+import by.artsem.footballrestapi.dto.BrandDTO;
 import by.artsem.footballrestapi.dto.PlayerDTO;
 import by.artsem.footballrestapi.dto.mappers.PlayerMapper;
 import by.artsem.footballrestapi.models.Player;
 import by.artsem.footballrestapi.services.PlayerService;
-import by.artsem.footballrestapi.util.ErrorResponse;
-import by.artsem.footballrestapi.util.DataNotCreatedException;
-import by.artsem.footballrestapi.util.DataNotFoundedException;
+import by.artsem.footballrestapi.exceptions.DataNotCreatedException;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -43,11 +42,44 @@ public class PlayerController {
     }
 
     @PostMapping("/new")
-    public ResponseEntity<HttpStatus> create(@RequestBody @Valid Player player, BindingResult bindingResult) {
+    public ResponseEntity<HttpStatus> create(@RequestBody @Valid PlayerDTO playerDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new DataNotCreatedException(createErrMessage(bindingResult));
         }
-        playerService.savePlayer(player);
+        playerService.savePlayer(playerMapper.mapFromDTO(playerDTO));
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}/update")
+    private ResponseEntity<HttpStatus> update(@PathVariable("id") Long id,
+                                              @RequestBody @Valid PlayerDTO playerDto,
+                                              BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new DataNotCreatedException(createErrMessage(bindingResult));
+        }
+        playerService.update(id, playerMapper.mapFromDTO(playerDto));
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}/add-club")
+    private ResponseEntity<HttpStatus> addClub(@PathVariable("id") Long id,
+                                                 @RequestBody String clubName,
+                                                 BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new DataNotCreatedException(createErrMessage(bindingResult));
+        }
+        playerService.addExistClub(id, clubName);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}/add-brand")
+    private ResponseEntity<HttpStatus> addBrand(@PathVariable("id") Long id,
+                                                 @RequestBody String brandName,
+                                                 BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new DataNotCreatedException(createErrMessage(bindingResult));
+        }
+        playerService.addExistBrand(id, brandName);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 

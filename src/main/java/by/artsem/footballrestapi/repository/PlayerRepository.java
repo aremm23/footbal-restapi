@@ -8,5 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface PlayerRepository extends JpaRepository<Player, Long> {
+    Boolean existsByName(String name);
     Optional<Player> findByName(String name);
 }

@@ -1,4 +1,4 @@
-package by.artsem.footballrestapi.util;
+package by.artsem.footballrestapi.exceptions;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;

@@ -18,7 +18,9 @@ public class ClubMapper {
     public ClubDTO mapToDTO(Club club) {
         ClubDTO clubDTO = new ClubDTO();
         clubDTO.setName(club.getName());
-        clubDTO.setPlayersNames(club.getPlayers().stream().map(Player::getName).collect(Collectors.toList()));
+        if(club.getPlayers() != null) {
+            clubDTO.setPlayersNames(club.getPlayers().stream().map(Player::getName).collect(Collectors.toList()));
+        }
         return clubDTO;
     }
 

@@ -1,9 +1,8 @@
 package by.artsem.footballrestapi.services;
 
 import by.artsem.footballrestapi.models.MyUser;
-import by.artsem.footballrestapi.models.Player;
 import by.artsem.footballrestapi.repository.MyUserRepository;
-import by.artsem.footballrestapi.util.DataNotFoundedException;
+import by.artsem.footballrestapi.exceptions.DataNotFoundedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

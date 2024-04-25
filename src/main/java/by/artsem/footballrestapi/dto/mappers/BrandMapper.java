@@ -17,7 +17,9 @@ public class BrandMapper {
     public BrandDTO mapToDTO(Brand brand) {
         BrandDTO brandDTO = new BrandDTO();
         brandDTO.setName(brand.getName());
-        brandDTO.setPlayers(brand.getPlayers().stream().map(Player::getName).collect(Collectors.toList()));
+        if(brand.getPlayers() != null) {
+            brandDTO.setPlayers(brand.getPlayers().stream().map(Player::getName).collect(Collectors.toList()));
+        }
         return brandDTO;
     }
 

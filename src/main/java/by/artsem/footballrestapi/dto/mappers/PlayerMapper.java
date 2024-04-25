@@ -20,8 +20,12 @@ public class PlayerMapper {
         PlayerDTO playerDTO = new PlayerDTO();
         playerDTO.setName(player.getName());
         playerDTO.setPrice(player.getPrice());
-        playerDTO.setBrands(player.getBrands().stream().map(Brand::getName).collect(Collectors.toList()));
-        playerDTO.setClubName(player.getClub().getName());
+        if (player.getBrands() != null) {
+            playerDTO.setBrands(player.getBrands().stream().map(Brand::getName).collect(Collectors.toList()));
+        }
+        if (player.getClub() != null) {
+            playerDTO.setClub(player.getClub().getName());
+        }
         return playerDTO;
     }
 
@@ -29,8 +33,8 @@ public class PlayerMapper {
         Player player = new Player();
         player.setName(playerDTO.getName());
         player.setPrice(playerDTO.getPrice());
-        if (playerDTO.getClubName() != null) {
-            player.setClub(clubService.findByName(playerDTO.getClubName()));
+        if (playerDTO.getClub() != null) {
+            player.setClub(clubService.findByName(playerDTO.getClub()));
         }
         if (playerDTO.getBrands() != null) {
             player.setBrands(brandService.findByNames(playerDTO.getBrands()));

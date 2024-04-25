@@ -3,8 +3,8 @@ package by.artsem.footballrestapi.controllers;
 
 import by.artsem.footballrestapi.dto.BrandDTO;
 import by.artsem.footballrestapi.dto.mappers.BrandMapper;
+import by.artsem.footballrestapi.exceptions.DataNotCreatedException;
 import by.artsem.footballrestapi.services.BrandService;
-import by.artsem.footballrestapi.util.DataNotCreatedException;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -42,23 +42,46 @@ public class BrandController {
     }
 
     @PostMapping("/new")
-    public ResponseEntity<HttpStatus> create(@RequestBody @Valid BrandDTO brandDto, BindingResult bindingResult) {
+    public ResponseEntity<HttpStatus> create(@RequestBody @Valid BrandDTO brandDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new DataNotCreatedException(createErrMessage(bindingResult));
         }
-        brandService.saveBrand(brandMapper.mapFromDTO(brandDto));
+        brandService.saveBrand(brandMapper.mapFromDTO(brandDTO));
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
+    @PutMapping("/{id}/update-name")
+    private ResponseEntity<HttpStatus> update(@PathVariable("id") Long id,
+                                              @RequestBody @Valid BrandDTO brandDto,
+                                              BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new DataNotCreatedException(createErrMessage(bindingResult));
+        }
+        brandService.updateName(id, brandMapper.mapFromDTO(brandDto));
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}/add-player")
+    private ResponseEntity<HttpStatus> addPlayer(@PathVariable("id") Long id,
+                                                 @RequestBody String playerName,
+                                                 BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new DataNotCreatedException(createErrMessage(bindingResult));
+        }
+        brandService.addExistPlayer(id, playerName);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+
     private String createErrMessage(BindingResult bindingResult) {
-            StringBuilder errorMsg = new StringBuilder();
-            List<FieldError> errors = bindingResult.getFieldErrors();
-            for (FieldError error : errors) {
-                errorMsg.append(error.getField())
-                        .append(" - ")
-                        .append(error.getDefaultMessage())
-                        .append(";");
-            }
-            return errorMsg.toString();
+        StringBuilder errorMsg = new StringBuilder();
+        List<FieldError> errors = bindingResult.getFieldErrors();
+        for (FieldError error : errors) {
+            errorMsg.append(error.getField())
+                    .append(" - ")
+                    .append(error.getDefaultMessage())
+                    .append(";");
+        }
+        return errorMsg.toString();
     }
 }
