@@ -59,6 +59,12 @@ public class ClubController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
+    @DeleteMapping("/{id}/remove")
+    private ResponseEntity<HttpStatus> remove(@PathVariable("id") Long id) {
+        clubService.removeClub(id);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
     private String createErrMessage(BindingResult bindingResult) {
         StringBuilder errorMsg = new StringBuilder();
         List<FieldError> errors = bindingResult.getFieldErrors();

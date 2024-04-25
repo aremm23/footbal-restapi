@@ -51,4 +51,8 @@ public class Player {
         }
         brands.add(brand);
     }
+
+    public void deleteBrand(Brand brand) {
+        brands.remove(brand);
+    }
 }

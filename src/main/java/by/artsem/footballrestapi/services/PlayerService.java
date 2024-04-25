@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.xml.xpath.XPathNodes;
 import java.util.List;
 
 @Service
@@ -31,8 +32,11 @@ public class PlayerService {
     }
 
     @Transactional
-    public void removePlayer(Player player) {
-        playerRepository.delete(player);
+    public void removePlayer(Long id) {
+        if(!playerRepository.existsById(id)) {
+            throw new DataNotFoundedException("Player with id " + id + " not founded");
+        }
+        playerRepository.deleteById(id);
     }
 
     public List<Player> getPlayers() {

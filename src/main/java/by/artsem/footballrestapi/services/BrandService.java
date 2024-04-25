@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional(readOnly = true)
@@ -30,8 +31,12 @@ public class BrandService {
     }
 
     @Transactional
-    public void removeBrand(Brand brand) {
-        brandRepository.delete(brand);
+    public void removeBrand(Long id) {
+        Brand brand = brandRepository.findById(id).orElseThrow(() ->
+                new DataNotFoundedException("Brand with id " + id +" not founded")
+        );
+        brand.getPlayers().forEach(player -> player.deleteBrand(brand));
+        brandRepository.deleteById(id);
     }
 
     public List<Brand> getBrands() {
@@ -40,24 +45,24 @@ public class BrandService {
 
     public Brand findById(Long id) {
         return brandRepository.findById(id).orElseThrow(() ->
-                new DataNotFoundedException("Brand with id" + id +" not founded")
+                new DataNotFoundedException("Brand with id " + id +" not founded")
         );
     }
 
     @Transactional
     public void updateName(Long id, Brand updatedBrand) {
         Brand brand = brandRepository.findById(id).orElseThrow(() ->
-                        new DataNotFoundedException("Brand with name" + id +" not founded")
+                        new DataNotFoundedException("Brand with name " + id +" not founded")
         );
         brand.setName(updatedBrand.getName());
     }
     @Transactional
     public void addExistPlayer(Long id, String playerName) {
         Brand brand = brandRepository.findById(id).orElseThrow(() ->
-                new DataNotFoundedException("Brand with id" + id +" not founded")
+                new DataNotFoundedException("Brand with id " + id +" not founded")
         );
         Player player = playerRepository.findByName(playerName).orElseThrow(() ->
-                new DataNotFoundedException("Player with name" + playerName +" not founded")
+                new DataNotFoundedException("Player with name " + playerName +" not founded")
         );
         player.addBrand(brand);
     }

@@ -32,10 +32,12 @@ public class ClubService {
     }
 
     @Transactional
-    public void removeClub(Club club) {
-        clubRepository.delete(club);
+    public void removeClub(Long id) {
+        if(!clubRepository.existsById(id)) {
+            throw new DataNotFoundedException("Club with id " + id + " not founded");
+        }
+        clubRepository.deleteById(id);
     }
-
     public List<Club> getClubs() {
         return clubRepository.findAll();
     }

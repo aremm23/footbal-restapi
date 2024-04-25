@@ -72,6 +72,11 @@ public class BrandController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
+    @DeleteMapping("/{id}/remove")
+    private ResponseEntity<HttpStatus> remove(@PathVariable("id") Long id) {
+        brandService.removeBrand(id);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
 
     private String createErrMessage(BindingResult bindingResult) {
         StringBuilder errorMsg = new StringBuilder();
