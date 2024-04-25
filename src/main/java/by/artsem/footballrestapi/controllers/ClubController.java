@@ -30,7 +30,7 @@ public class ClubController {
     }
 
     @GetMapping("/get-all")
-    public ResponseEntity<List<ClubDTO>> test() {
+    public ResponseEntity<List<ClubDTO>> findAll() {
         return ResponseEntity.ok(clubService.getClubs().stream().map(clubMapper::mapToDTO).collect(Collectors.toList()));
     }
 
@@ -49,7 +49,7 @@ public class ClubController {
     }
 
     @PutMapping("/{id}/add-player")
-    private ResponseEntity<HttpStatus> addPlayer(@PathVariable("id") Long id,
+    public ResponseEntity<HttpStatus> addPlayer(@PathVariable("id") Long id,
                                                  @RequestBody String playerName,
                                                  BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -60,10 +60,16 @@ public class ClubController {
     }
 
     @DeleteMapping("/{id}/remove")
-    private ResponseEntity<HttpStatus> remove(@PathVariable("id") Long id) {
+    public ResponseEntity<HttpStatus> remove(@PathVariable("id") Long id) {
         clubService.removeClub(id);
         return ResponseEntity.ok(HttpStatus.OK);
     }
+
+    @GetMapping("/get-players-100")
+    public ResponseEntity<List<String>> getExpensivePlayers() {
+        return ResponseEntity.ok(clubService.getClubWithExpensivePlayers());
+    }
+
 
     private String createErrMessage(BindingResult bindingResult) {
         StringBuilder errorMsg = new StringBuilder();
