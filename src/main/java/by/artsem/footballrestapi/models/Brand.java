@@ -2,15 +2,15 @@ package by.artsem.footballrestapi.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "brand")
+@ToString(exclude = "players")
+@EqualsAndHashCode(exclude = "players")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

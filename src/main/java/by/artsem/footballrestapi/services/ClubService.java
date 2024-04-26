@@ -36,8 +36,14 @@ public class ClubService {
     }
 
     public List<Club> getClubs() {
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         return clubRepository.findAll();
     }
+
 
     public Club findById(Long id) {
         return clubRepository.findById(id).orElseThrow(() ->
@@ -60,11 +66,13 @@ public class ClubService {
         player.setClub(club);
     }
 
+
     public Club findByName(String name) {
         return clubRepository.findByName(name).orElseThrow(() ->
                 new DataNotFoundedException("Club with name " + name + " not founded")
         );
     }
+
 
     public List<String> getClubWithExpensivePlayers() {
         return clubRepository.findAllByPlayersPrice().orElse(null);

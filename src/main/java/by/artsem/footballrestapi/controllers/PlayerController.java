@@ -1,11 +1,9 @@
 package by.artsem.footballrestapi.controllers;
 
-import by.artsem.footballrestapi.dto.BrandDTO;
 import by.artsem.footballrestapi.dto.PlayerDTO;
 import by.artsem.footballrestapi.dto.mappers.PlayerMapper;
-import by.artsem.footballrestapi.models.Player;
-import by.artsem.footballrestapi.services.PlayerService;
 import by.artsem.footballrestapi.exceptions.DataNotCreatedException;
+import by.artsem.footballrestapi.services.PlayerService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -63,8 +61,8 @@ public class PlayerController {
 
     @PutMapping("/{id}/add-club")
     private ResponseEntity<HttpStatus> addClub(@PathVariable("id") Long id,
-                                                 @RequestBody String clubName,
-                                                 BindingResult bindingResult) {
+                                               @RequestBody String clubName,
+                                               BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new DataNotCreatedException(createErrMessage(bindingResult));
         }
@@ -74,8 +72,8 @@ public class PlayerController {
 
     @PutMapping("/{id}/add-brand")
     private ResponseEntity<HttpStatus> addBrand(@PathVariable("id") Long id,
-                                                 @RequestBody String brandName,
-                                                 BindingResult bindingResult) {
+                                                @RequestBody String brandName,
+                                                BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new DataNotCreatedException(createErrMessage(bindingResult));
         }

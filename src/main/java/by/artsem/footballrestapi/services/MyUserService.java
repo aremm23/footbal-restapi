@@ -1,8 +1,8 @@
 package by.artsem.footballrestapi.services;
 
+import by.artsem.footballrestapi.exceptions.DataNotFoundedException;
 import by.artsem.footballrestapi.models.MyUser;
 import by.artsem.footballrestapi.repository.MyUserRepository;
-import by.artsem.footballrestapi.exceptions.DataNotFoundedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +19,7 @@ public class MyUserService {
     public MyUserService(MyUserRepository myUserRepository) {
         this.myUserRepository = myUserRepository;
     }
+
     @Transactional
     public void saveUser(MyUser user) {
         user.setCreated(LocalDateTime.now());
@@ -26,6 +27,7 @@ public class MyUserService {
         user.setCreatedWho("ADMIN");//TODO
         myUserRepository.save(user);
     }
+
     @Transactional
     public void removeUser(MyUser user) {
         myUserRepository.delete(user);

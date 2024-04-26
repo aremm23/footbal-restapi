@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
@@ -12,7 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@ToString(exclude = "players")
+@ToString(exclude = {"players"})
+@EqualsAndHashCode(exclude = {"players"})
 @Entity
 @Table(name = "club")
 @NoArgsConstructor
@@ -26,6 +28,7 @@ public class Club {
     @Column(name = "name")
     private String name;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "club")
     private List<Player> players;
 

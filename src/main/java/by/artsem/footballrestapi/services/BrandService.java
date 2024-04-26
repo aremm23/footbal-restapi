@@ -1,22 +1,22 @@
 package by.artsem.footballrestapi.services;
 
 import by.artsem.footballrestapi.exceptions.DataNotCreatedException;
+import by.artsem.footballrestapi.exceptions.DataNotFoundedException;
 import by.artsem.footballrestapi.models.Brand;
 import by.artsem.footballrestapi.models.Player;
 import by.artsem.footballrestapi.repository.BrandRepository;
-import by.artsem.footballrestapi.exceptions.DataNotFoundedException;
 import by.artsem.footballrestapi.repository.PlayerRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @Transactional(readOnly = true)
 @AllArgsConstructor
+@Slf4j
 public class BrandService {
     private final BrandRepository brandRepository;
     private final PlayerRepository playerRepository;
@@ -33,7 +33,7 @@ public class BrandService {
     @Transactional
     public void removeBrand(Long id) {
         Brand brand = brandRepository.findById(id).orElseThrow(() ->
-                new DataNotFoundedException("Brand with id " + id +" not founded")
+                new DataNotFoundedException("Brand with id " + id + " not founded")
         );
         brand.getPlayers().forEach(player -> player.deleteBrand(brand));
         brandRepository.deleteById(id);
@@ -45,31 +45,32 @@ public class BrandService {
 
     public Brand findById(Long id) {
         return brandRepository.findById(id).orElseThrow(() ->
-                new DataNotFoundedException("Brand with id " + id +" not founded")
+                new DataNotFoundedException("Brand with id " + id + " not founded")
         );
     }
 
     @Transactional
     public void updateName(Long id, Brand updatedBrand) {
         Brand brand = brandRepository.findById(id).orElseThrow(() ->
-                        new DataNotFoundedException("Brand with name " + id +" not founded")
+                new DataNotFoundedException("Brand with name " + id + " not founded")
         );
         brand.setName(updatedBrand.getName());
     }
+
     @Transactional
     public void addExistPlayer(Long id, String playerName) {
         Brand brand = brandRepository.findById(id).orElseThrow(() ->
-                new DataNotFoundedException("Brand with id " + id +" not founded")
+                new DataNotFoundedException("Brand with id " + id + " not founded")
         );
         Player player = playerRepository.findByName(playerName).orElseThrow(() ->
-                new DataNotFoundedException("Player with name " + playerName +" not founded")
+                new DataNotFoundedException("Player with name " + playerName + " not founded")
         );
         player.addBrand(brand);
     }
 
     public Brand findByName(String name) {
         return brandRepository.findByName(name).orElseThrow(() ->
-                new DataNotFoundedException("Brand with name" + name +" not founded")
+                new DataNotFoundedException("Brand with name" + name + " not founded")
         );
     }
 
