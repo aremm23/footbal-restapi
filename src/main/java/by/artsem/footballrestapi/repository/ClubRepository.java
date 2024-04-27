@@ -13,6 +13,6 @@ import java.util.Optional;
 public interface ClubRepository extends JpaRepository<Club, Long> {
     Optional<Club> findByName(String name);
     Boolean existsByName(String name);
-    @Query("SELECT c.name FROM Club c JOIN c.players p WHERE p.price > 100")
-    Optional<List<String>> findAllByPlayersPrice();
+    @Query("SELECT c FROM Club c JOIN c.players p GROUP BY c ORDER BY SUM(p.price) DESC LIMIT 1")
+    Optional<Club> findClubWithHighestTotalPlayerValue();
 }

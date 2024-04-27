@@ -45,7 +45,6 @@ public class ClubController {
         return ResponseEntity.ok(clubService.getClubs());
     }
 
-
     @PostMapping("/new")
     public ResponseEntity<HttpStatus> create(@RequestBody @Valid ClubDTO clubDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -72,9 +71,9 @@ public class ClubController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @GetMapping("/get-players-100")
-    public ResponseEntity<List<String>> getExpensivePlayers() {
-        return ResponseEntity.ok(clubService.getClubWithExpensivePlayers());
+    @GetMapping("/get-expensive")
+    public ResponseEntity<ClubDTO> getExpensivePlayers() {
+        return ResponseEntity.ok(clubMapper.mapToDTO(clubService.getMostExpensiveClub()));
     }
 
 

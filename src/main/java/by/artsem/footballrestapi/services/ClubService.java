@@ -69,7 +69,7 @@ public class ClubService {
     }
 
 
-    public List<String> getClubWithExpensivePlayers() {
-        return clubRepository.findAllByPlayersPrice().orElse(null);
+    public Club getMostExpensiveClub() {
+        return clubRepository.findClubWithHighestTotalPlayerValue().orElse(null);
     }
 }
