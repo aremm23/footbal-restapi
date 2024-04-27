@@ -33,7 +33,7 @@ public class MyUserService {
         myUserRepository.delete(user);
     }
 
-    public List<MyUser> findUsers() {
+    public List<MyUser> findUsers()    {
         return myUserRepository.findAll();
     }
 

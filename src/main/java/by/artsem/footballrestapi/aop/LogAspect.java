@@ -23,6 +23,11 @@ public class LogAspect {
     }
     @AfterReturning(value = "logPointCut()", returning = "retVal")
     public void logAfterReturn(JoinPoint joinPoint, Object retVal) {
-        log.info("Returned from {}, value {}", joinPoint.getSignature() ,retVal.toString());
+        if(retVal == null) {
+            log.info("Returned void from {}", joinPoint.getSignature());
+        }
+        else {
+            log.info("Returned from {}, value {}", joinPoint.getSignature() ,retVal);
+        }
     }
 }

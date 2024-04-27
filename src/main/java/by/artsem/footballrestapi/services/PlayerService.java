@@ -25,7 +25,9 @@ public class PlayerService {
         if (playerRepository.existsByName(player.getName())) {
             throw new DataNotCreatedException("Player with name " + player.getName() + " already exist");
         }
-        player.getBrands().forEach(brand -> brand.addPlayer(player));
+        if (player.getBrands() != null) {
+            player.getBrands().forEach(brand -> brand.addPlayer(player));
+        }
         playerRepository.save(player);
     }
 

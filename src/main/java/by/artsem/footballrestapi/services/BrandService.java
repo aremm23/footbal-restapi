@@ -7,7 +7,6 @@ import by.artsem.footballrestapi.models.Player;
 import by.artsem.footballrestapi.repository.BrandRepository;
 import by.artsem.footballrestapi.repository.PlayerRepository;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +15,6 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 @AllArgsConstructor
-@Slf4j
 public class BrandService {
     private final BrandRepository brandRepository;
     private final PlayerRepository playerRepository;

@@ -7,6 +7,7 @@ import by.artsem.footballrestapi.services.PlayerService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
@@ -27,7 +28,8 @@ public class BrandMapper {
         Brand brand = new Brand();
         brand.setName(brandDTO.getName());
         if(brandDTO.getPlayers() != null) {
-            brand.setPlayers(playerService.findByNames(brandDTO.getPlayers()));
+            brand.setPlayers(playerService.findByNames(brandDTO.getPlayers())
+                    .stream().filter(Objects::nonNull).toList());
         }
         return brand;
     }

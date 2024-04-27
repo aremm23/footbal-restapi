@@ -7,6 +7,7 @@ import by.artsem.footballrestapi.services.PlayerService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
@@ -28,7 +29,8 @@ public class ClubMapper {
         Club club = new Club();
         club.setName(clubDTO.getName());
         if(clubDTO.getPlayersNames() != null) {
-            club.setPlayers(playerService.findByNames(clubDTO.getPlayersNames()));
+            club.setPlayers(playerService.findByNames(clubDTO.getPlayersNames()
+                    .stream().filter(Objects::nonNull).toList()));
         }
         return club;
     }
