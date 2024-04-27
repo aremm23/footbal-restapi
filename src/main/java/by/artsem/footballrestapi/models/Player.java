@@ -1,5 +1,6 @@
 package by.artsem.footballrestapi.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -32,10 +33,12 @@ public class Player {
     private Integer price;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "club_id")
     private Club club;
 
     @ManyToMany
+    @JsonIgnore
     @JoinTable(
             name = "player_brand",
             joinColumns = @JoinColumn(name = "player_id"),

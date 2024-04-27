@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 public class LogAspect {
-    @Pointcut("execution(public * by.artsem.footballrestapi.services.*.*(*))")
+    @Pointcut("within(by.artsem.footballrestapi.services.*)")
     public static void logPointCut(){}
 
     @Before(value = "logPointCut()")
@@ -17,14 +17,20 @@ public class LogAspect {
         log.info("Started: {}", joinPoint.getSignature());
     }
 
+    @After(value = "logPointCut()")
+    public void logAfter(JoinPoint joinPoint) {
+        log.info("Finish: {}.", joinPoint.getSignature());
+    }
+
     @AfterThrowing(value = "logPointCut()", throwing = "thrVal")
     public void logAfterThrow(JoinPoint joinPoint, Throwable thrVal) {
         log.error("Exception thrown in {}. Exception: {} ", joinPoint.getSignature(), thrVal.toString());
     }
+
     @AfterReturning(value = "logPointCut()", returning = "retVal")
     public void logAfterReturn(JoinPoint joinPoint, Object retVal) {
         if(retVal == null) {
-            log.info("Returned void from {}", joinPoint.getSignature());
+            log.info("Returned null from {}", joinPoint.getSignature());
         }
         else {
             log.info("Returned from {}, value {}", joinPoint.getSignature() ,retVal);

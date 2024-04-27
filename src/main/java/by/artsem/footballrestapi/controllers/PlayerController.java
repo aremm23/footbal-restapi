@@ -3,6 +3,7 @@ package by.artsem.footballrestapi.controllers;
 import by.artsem.footballrestapi.dto.PlayerDTO;
 import by.artsem.footballrestapi.dto.mappers.PlayerMapper;
 import by.artsem.footballrestapi.exceptions.DataNotCreatedException;
+import by.artsem.footballrestapi.models.Player;
 import by.artsem.footballrestapi.services.PlayerService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -37,6 +38,11 @@ public class PlayerController {
     @GetMapping("/get-id/{id}")
     public ResponseEntity<PlayerDTO> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(playerMapper.mapToDTO(playerService.findById(id)));
+    }
+
+    @GetMapping("/get-all-id")
+    public ResponseEntity<List<Player>> getAllWithId() {
+        return ResponseEntity.ok(playerService.getPlayers());
     }
 
     @PostMapping("/new")

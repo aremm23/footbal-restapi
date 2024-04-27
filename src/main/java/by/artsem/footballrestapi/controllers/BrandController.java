@@ -4,6 +4,7 @@ package by.artsem.footballrestapi.controllers;
 import by.artsem.footballrestapi.dto.BrandDTO;
 import by.artsem.footballrestapi.dto.mappers.BrandMapper;
 import by.artsem.footballrestapi.exceptions.DataNotCreatedException;
+import by.artsem.footballrestapi.models.Brand;
 import by.artsem.footballrestapi.services.BrandService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -39,6 +40,11 @@ public class BrandController {
     @GetMapping("/get-name/{name}")
     public ResponseEntity<BrandDTO> findById(@PathVariable("name") String name) {
         return ResponseEntity.ok(brandMapper.mapToDTO(brandService.findByName(name)));
+    }
+
+    @GetMapping("/get-all-id")
+    public ResponseEntity<List<Brand>> getAllWithId() {
+        return ResponseEntity.ok(brandService.getBrands());
     }
 
     @PostMapping("/new")

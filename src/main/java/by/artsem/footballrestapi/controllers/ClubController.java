@@ -2,8 +2,9 @@ package by.artsem.footballrestapi.controllers;
 
 import by.artsem.footballrestapi.dto.ClubDTO;
 import by.artsem.footballrestapi.dto.mappers.ClubMapper;
-import by.artsem.footballrestapi.services.ClubService;
 import by.artsem.footballrestapi.exceptions.DataNotCreatedException;
+import by.artsem.footballrestapi.models.Club;
+import by.artsem.footballrestapi.services.ClubService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -39,6 +40,12 @@ public class ClubController {
         return ResponseEntity.ok(clubMapper.mapToDTO(clubService.findById(id)));
     }
 
+    @GetMapping("/get-all-id")
+    public ResponseEntity<List<Club>> getAllWithId() {
+        return ResponseEntity.ok(clubService.getClubs());
+    }
+
+
     @PostMapping("/new")
     public ResponseEntity<HttpStatus> create(@RequestBody @Valid ClubDTO clubDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -50,8 +57,8 @@ public class ClubController {
 
     @PutMapping("/{id}/add-player")
     public ResponseEntity<HttpStatus> addPlayer(@PathVariable("id") Long id,
-                                                 @RequestBody String playerName,
-                                                 BindingResult bindingResult) {
+                                                @RequestBody String playerName,
+                                                BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new DataNotCreatedException(createErrMessage(bindingResult));
         }
