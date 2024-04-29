@@ -13,6 +13,7 @@ import java.util.List;
 @Data
 @ToString(exclude = {"club", "brands"})
 @EqualsAndHashCode(exclude = {"club", "brands"})
+@Builder
 @Entity
 @Table(name = "player")
 @NoArgsConstructor

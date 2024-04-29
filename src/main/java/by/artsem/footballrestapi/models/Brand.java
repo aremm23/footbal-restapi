@@ -12,6 +12,7 @@ import java.util.List;
 @Table(name = "brand")
 @ToString(exclude = "players")
 @EqualsAndHashCode(exclude = "players")
+@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

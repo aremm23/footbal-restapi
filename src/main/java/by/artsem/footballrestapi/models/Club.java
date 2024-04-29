@@ -4,10 +4,7 @@ package by.artsem.footballrestapi.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +12,8 @@ import java.util.List;
 @Data
 @ToString(exclude = {"players"})
 @EqualsAndHashCode(exclude = {"players"})
+@Builder
+@AllArgsConstructor
 @Entity
 @Table(name = "club")
 @NoArgsConstructor
