@@ -5,12 +5,12 @@ import by.artsem.footballrestapi.dto.mappers.ClubMapper;
 import by.artsem.footballrestapi.exceptions.DataNotCreatedException;
 import by.artsem.footballrestapi.models.Club;
 import by.artsem.footballrestapi.services.ClubService;
+import by.artsem.footballrestapi.util.ValidationErrMessage;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -48,7 +48,7 @@ public class ClubController {
     @PostMapping("/new")
     public ResponseEntity<HttpStatus> create(@RequestBody @Valid ClubDTO clubDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            throw new DataNotCreatedException(createErrMessage(bindingResult));
+            throw new DataNotCreatedException(ValidationErrMessage.createValidationErrMessage(bindingResult));
         }
         clubService.saveClub(clubMapper.mapFromDTO(clubDto));
         return ResponseEntity.ok(HttpStatus.OK);
@@ -59,7 +59,7 @@ public class ClubController {
                                                 @RequestBody String playerName,
                                                 BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            throw new DataNotCreatedException(createErrMessage(bindingResult));
+            throw new DataNotCreatedException(ValidationErrMessage.createValidationErrMessage(bindingResult));
         }
         clubService.addExistPlayer(id, playerName);
         return ResponseEntity.ok(HttpStatus.OK);
@@ -76,16 +76,4 @@ public class ClubController {
         return ResponseEntity.ok(clubMapper.mapToDTO(clubService.getMostExpensiveClub()));
     }
 
-
-    private String createErrMessage(BindingResult bindingResult) {
-        StringBuilder errorMsg = new StringBuilder();
-        List<FieldError> errors = bindingResult.getFieldErrors();
-        for (FieldError error : errors) {
-            errorMsg.append(error.getField())
-                    .append(" - ")
-                    .append(error.getDefaultMessage())
-                    .append(";");
-        }
-        return errorMsg.toString();
-    }
 }

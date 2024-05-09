@@ -3,15 +3,15 @@ package by.artsem.footballrestapi.controllers;
 import by.artsem.footballrestapi.dto.MyUserRequestDTO;
 import by.artsem.footballrestapi.dto.MyUserResponseDTO;
 import by.artsem.footballrestapi.dto.mappers.MyUserMapper;
+import by.artsem.footballrestapi.exceptions.DataNotCreatedException;
 import by.artsem.footballrestapi.models.MyUser;
 import by.artsem.footballrestapi.services.MyUserService;
-import by.artsem.footballrestapi.exceptions.DataNotCreatedException;
+import by.artsem.footballrestapi.util.ValidationErrMessage;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -47,21 +47,10 @@ public class MyUserController {
     @PostMapping("/new")
     public ResponseEntity<HttpStatus> create(@RequestBody @Valid MyUserRequestDTO userDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            throw new DataNotCreatedException(createErrMessage(bindingResult));
+            throw new DataNotCreatedException(ValidationErrMessage.createValidationErrMessage(bindingResult));
         }
         myUserService.saveUser(myUserMapper.mapFromDTO(userDTO));
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    private String createErrMessage(BindingResult bindingResult) {
-        StringBuilder errorMsg = new StringBuilder();
-        List<FieldError> errors = bindingResult.getFieldErrors();
-        for (FieldError error : errors) {
-            errorMsg.append(error.getField())
-                    .append(" - ")
-                    .append(error.getDefaultMessage())
-                    .append(";");
-        }
-        return errorMsg.toString();
-    }
 }

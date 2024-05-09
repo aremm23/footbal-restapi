@@ -5,12 +5,12 @@ import by.artsem.footballrestapi.dto.mappers.PlayerMapper;
 import by.artsem.footballrestapi.exceptions.DataNotCreatedException;
 import by.artsem.footballrestapi.models.Player;
 import by.artsem.footballrestapi.services.PlayerService;
+import by.artsem.footballrestapi.util.ValidationErrMessage;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -48,7 +48,7 @@ public class PlayerController {
     @PostMapping("/new")
     public ResponseEntity<HttpStatus> create(@RequestBody @Valid PlayerDTO playerDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            throw new DataNotCreatedException(createErrMessage(bindingResult));
+            throw new DataNotCreatedException(ValidationErrMessage.createValidationErrMessage(bindingResult));
         }
         playerService.savePlayer(playerMapper.mapFromDTO(playerDTO));
         return ResponseEntity.ok(HttpStatus.OK);
@@ -59,7 +59,7 @@ public class PlayerController {
                                               @RequestBody @Valid PlayerDTO playerDto,
                                               BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            throw new DataNotCreatedException(createErrMessage(bindingResult));
+            throw new DataNotCreatedException(ValidationErrMessage.createValidationErrMessage(bindingResult));
         }
         playerService.update(id, playerMapper.mapFromDTO(playerDto));
         return ResponseEntity.ok(HttpStatus.OK);
@@ -70,7 +70,7 @@ public class PlayerController {
                                                @RequestBody String clubName,
                                                BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            throw new DataNotCreatedException(createErrMessage(bindingResult));
+            throw new DataNotCreatedException(ValidationErrMessage.createValidationErrMessage(bindingResult));
         }
         playerService.addExistClub(id, clubName);
         return ResponseEntity.ok(HttpStatus.OK);
@@ -81,7 +81,7 @@ public class PlayerController {
                                                 @RequestBody String brandName,
                                                 BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            throw new DataNotCreatedException(createErrMessage(bindingResult));
+            throw new DataNotCreatedException(ValidationErrMessage.createValidationErrMessage(bindingResult));
         }
         playerService.addExistBrand(id, brandName);
         return ResponseEntity.ok(HttpStatus.OK);
@@ -91,17 +91,5 @@ public class PlayerController {
     private ResponseEntity<HttpStatus> remove(@PathVariable("id") Long id) {
         playerService.removePlayer(id);
         return ResponseEntity.ok(HttpStatus.OK);
-    }
-
-    private String createErrMessage(BindingResult bindingResult) {
-        StringBuilder errorMsg = new StringBuilder();
-        List<FieldError> errors = bindingResult.getFieldErrors();
-        for (FieldError error : errors) {
-            errorMsg.append(error.getField())
-                    .append(" - ")
-                    .append(error.getDefaultMessage())
-                    .append(";");
-        }
-        return errorMsg.toString();
     }
 }
