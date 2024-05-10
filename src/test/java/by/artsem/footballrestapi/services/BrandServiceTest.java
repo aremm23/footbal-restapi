@@ -6,6 +6,7 @@ import by.artsem.footballrestapi.models.Brand;
 import by.artsem.footballrestapi.models.Player;
 import by.artsem.footballrestapi.repository.BrandRepository;
 import by.artsem.footballrestapi.repository.PlayerRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -35,7 +36,8 @@ class BrandServiceTest {
     private Player testPlayer2;
     private Brand testBrand1;
 
-    private void init() {
+    @BeforeEach
+    public void init() {
         testPlayer1 = Player.builder()
                 .id(1L).price(100).name("PlayerTest2")
                 .brands(null).club(null)
@@ -54,7 +56,6 @@ class BrandServiceTest {
 
     @Test
     public void BrandService_SaveExist_ThrowsDataNotCreatedException() {
-        init();
         testBrand1.setPlayers(Collections.emptyList());
 
         given(brandRepository.existsByName("TestBrand1")).willReturn(Boolean.TRUE);
@@ -66,7 +67,6 @@ class BrandServiceTest {
 
     @Test
     public void BrandService_Save_AssociatePlayersWithBrand() {
-        init();
         List<Player> players = List.of(testPlayer1, testPlayer2);
         Brand brand = testBrand1;
         testBrand1.setPlayers(players);
@@ -81,7 +81,6 @@ class BrandServiceTest {
 
     @Test
     public void BrandService_Remove_AssociatePlayersWithBrand() {
-        init();
         testPlayer1.addBrand(testBrand1);
         testPlayer2.addBrand(testBrand1);
         List<Player> players = List.of(testPlayer1, testPlayer2);
@@ -106,7 +105,6 @@ class BrandServiceTest {
 
     @Test
     public void BrandService_GetAll_ReturnsListOfBrands() {
-        init();
         List<Brand> brands = List.of(testBrand1,
                 Brand.builder().id(2L).name("TestBrand2").players(Collections.emptyList()).build()
         );
@@ -117,7 +115,6 @@ class BrandServiceTest {
 
     @Test
     public void BrandService_GetAll_EmptyList() {
-        init();
         List<Brand> brands = Collections.emptyList();
         given(brandRepository.findAll()).willReturn(brands);
 
@@ -127,7 +124,6 @@ class BrandServiceTest {
 
     @Test
     public void BrandService_FindById_ReturnsExpectedBrand() {
-        init();
         testBrand1.setPlayers(Collections.emptyList());
         given(brandRepository.findById(testBrand1.getId())).willReturn(Optional.of(testBrand1));
 
@@ -138,7 +134,6 @@ class BrandServiceTest {
 
     @Test
     public void BrandService_FindById_Throw_NotFoundException() {
-        init();
         testBrand1.setPlayers(Collections.emptyList());
         given(brandRepository.findById(testBrand1.getId())).willReturn(Optional.of(testBrand1));
 
@@ -151,7 +146,6 @@ class BrandServiceTest {
 
     @Test
     public void BrandService_UpdateName_ChangesBrandName() {
-        init();
         Brand testBrand2 = Brand.builder().id(1L).name("TestBrand2").players(Collections.emptyList()).build();
         given(brandRepository.findById(testBrand1.getId())).willReturn(Optional.of(testBrand1));
 
@@ -162,7 +156,6 @@ class BrandServiceTest {
 
     @Test
     public void BrandService_UpdateName_ThrowsDataNotFoundedException() {
-        init();
         Brand testBrand2 = Brand.builder().id(1L).name("TestBrand2").players(Collections.emptyList()).build();
         given(brandRepository.findById(testBrand1.getId())).willReturn(Optional.empty());
 
@@ -173,8 +166,6 @@ class BrandServiceTest {
 
     @Test
     public void BrandService_AddExistPlayer_SuccessfullyAddPlayerToBrand() {
-        init();
-
         given(brandRepository.findById(testBrand1.getId())).willReturn(Optional.of(testBrand1));
         given(playerRepository.findByName(testPlayer1.getName())).willReturn(Optional.of(testPlayer1));
 
@@ -185,8 +176,6 @@ class BrandServiceTest {
 
     @Test
     public void BrandService_AddExistPlayer_ThrowBrandNotFound() {
-        init();
-
         given(brandRepository.findById(testBrand1.getId())).willReturn(Optional.empty());
 
         assertThrows(DataNotFoundedException.class,
@@ -196,8 +185,6 @@ class BrandServiceTest {
 
     @Test
     public void BrandService_AddExistPlayer_ThrowPlayerNotFound() {
-        init();
-
         given(playerRepository.findByName(testPlayer1.getName())).willReturn(Optional.empty());
         given(brandRepository.findById(testBrand1.getId())).willReturn(Optional.of(testBrand1));
 
@@ -209,7 +196,6 @@ class BrandServiceTest {
 
     @Test
     public void BrandService_FindByName_ReturnsExpectedBrand() {
-        init();
         testBrand1.setPlayers(Collections.emptyList());
         given(brandRepository.findByName(testBrand1.getName())).willReturn(Optional.empty());
 
@@ -221,7 +207,6 @@ class BrandServiceTest {
 
     @Test
     public void BrandService_FindAll() {
-        init();
         testBrand1.setPlayers(Collections.emptyList());
         Brand testBrand2 = Brand.builder().id(1L).name("TestBrand2").players(Collections.emptyList()).build();
         List<Brand> brands = List.of(testBrand1, testBrand2);
