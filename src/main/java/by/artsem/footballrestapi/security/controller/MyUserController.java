@@ -1,11 +1,11 @@
-package by.artsem.footballrestapi.controllers;
+package by.artsem.footballrestapi.security.controller;
 
-import by.artsem.footballrestapi.dto.MyUserRequestDTO;
-import by.artsem.footballrestapi.dto.MyUserResponseDTO;
-import by.artsem.footballrestapi.dto.mappers.MyUserMapper;
+import by.artsem.footballrestapi.security.model.dto.MyUserRequestDTO;
+import by.artsem.footballrestapi.security.model.dto.MyUserResponseDTO;
+import by.artsem.footballrestapi.security.model.dto.MyUserMapper;
 import by.artsem.footballrestapi.exceptions.DataNotCreatedException;
-import by.artsem.footballrestapi.models.MyUser;
-import by.artsem.footballrestapi.services.MyUserService;
+import by.artsem.footballrestapi.security.model.MyUser;
+import by.artsem.footballrestapi.security.service.MyUserService;
 import by.artsem.footballrestapi.util.ValidationErrMessage;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package by.artsem.footballrestapi.dto;
+package by.artsem.footballrestapi.security.model.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
