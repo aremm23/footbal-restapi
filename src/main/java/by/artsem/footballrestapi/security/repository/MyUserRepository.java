@@ -1,6 +1,6 @@
-package by.artsem.footballrestapi.repository;
+package by.artsem.footballrestapi.security.repository;
 
-import by.artsem.footballrestapi.models.MyUser;
+import by.artsem.footballrestapi.security.model.MyUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

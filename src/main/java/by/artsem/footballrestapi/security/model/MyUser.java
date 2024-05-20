@@ -1,4 +1,4 @@
-package by.artsem.footballrestapi.models;
+package by.artsem.footballrestapi.security.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
