@@ -19,68 +19,68 @@ import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/brand")
+@RequestMapping("/api/v1/brands")
 public class BrandController {
 
     private BrandService brandService;
     private BrandMapper brandMapper;
 
-    @GetMapping("/get-all")
+    @GetMapping("")
     public ResponseEntity<List<BrandDTO>> findAll() {
         return ResponseEntity.ok(
                 brandService.getBrands().stream().map(brandMapper::mapToDTO).collect(Collectors.toList())
         );
     }
 
-    @GetMapping("/get-id/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<BrandDTO> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(brandMapper.mapToDTO(brandService.findById(id)));
     }
 
-    @GetMapping("/get-name/{name}")
-    public ResponseEntity<BrandDTO> findById(@PathVariable("name") String name) {
+    @GetMapping("/name/{name}")
+    public ResponseEntity<BrandDTO> findByName(@PathVariable("name") String name) {
         return ResponseEntity.ok(brandMapper.mapToDTO(brandService.findByName(name)));
     }
 
-    @GetMapping("/get-all-id")
+    @GetMapping("/with-id")
     public ResponseEntity<List<Brand>> getAllWithId() {
         return ResponseEntity.ok(brandService.getBrands());
     }
 
-    @PostMapping("/new")
+    @PostMapping("")
     public ResponseEntity<HttpStatus> create(@RequestBody @Valid BrandDTO brandDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new DataNotCreatedException(ValidationErrMessage.createValidationErrMessage(bindingResult));
         }
         brandService.saveBrand(brandMapper.mapFromDTO(brandDTO));
-        return ResponseEntity.ok(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}/update-name")
-    private ResponseEntity<HttpStatus> update(@PathVariable("id") Long id,
+    @PutMapping("/{id}/name")
+    public ResponseEntity<HttpStatus> update(@PathVariable("id") Long id,
                                               @RequestBody @Valid BrandDTO brandDto,
                                               BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new DataNotCreatedException(ValidationErrMessage.createValidationErrMessage(bindingResult));
         }
         brandService.updateName(id, brandMapper.mapFromDTO(brandDto));
-        return ResponseEntity.ok(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping("/{id}/add-player")
-    private ResponseEntity<HttpStatus> addPlayer(@PathVariable("id") Long id,
+    @PutMapping("/{id}/player")
+    public ResponseEntity<HttpStatus> addPlayer(@PathVariable("id") Long id,
                                                  @RequestBody String playerName,
                                                  BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new DataNotCreatedException(ValidationErrMessage.createValidationErrMessage(bindingResult));
         }
         brandService.addExistPlayer(id, playerName);
-        return ResponseEntity.ok(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("/{id}/remove")
-    private ResponseEntity<HttpStatus> remove(@PathVariable("id") Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> remove(@PathVariable("id") Long id) {
         brandService.removeBrand(id);
-        return ResponseEntity.ok(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

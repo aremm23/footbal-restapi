@@ -18,43 +18,44 @@ import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/club")
+@RequestMapping("/api/v1/clubs")
 public class ClubController {
 
     private ClubService clubService;
 
     private ClubMapper clubMapper;
 
-    @GetMapping("/get-name/{name}")
-    public ResponseEntity<ClubDTO> findById(@PathVariable("name") String name) {
+    @GetMapping("/name/{name}")
+    public ResponseEntity<ClubDTO> findByName(@PathVariable("name") String name) {
         return ResponseEntity.ok(clubMapper.mapToDTO(clubService.findByName(name)));
     }
 
-    @GetMapping("/get-all")
+    @GetMapping("")
     public ResponseEntity<List<ClubDTO>> findAll() {
-        return ResponseEntity.ok(clubService.getClubs().stream().map(clubMapper::mapToDTO).collect(Collectors.toList()));
+        return ResponseEntity.ok(clubService.getClubs().stream()
+                .map(clubMapper::mapToDTO).collect(Collectors.toList()));
     }
 
-    @GetMapping("/get-id/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<ClubDTO> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(clubMapper.mapToDTO(clubService.findById(id)));
     }
 
-    @GetMapping("/get-all-id")
+    @GetMapping("/with-id")
     public ResponseEntity<List<Club>> getAllWithId() {
         return ResponseEntity.ok(clubService.getClubs());
     }
 
-    @PostMapping("/new")
+    @PostMapping("")
     public ResponseEntity<HttpStatus> create(@RequestBody @Valid ClubDTO clubDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new DataNotCreatedException(ValidationErrMessage.createValidationErrMessage(bindingResult));
         }
         clubService.saveClub(clubMapper.mapFromDTO(clubDto));
-        return ResponseEntity.ok(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}/add-player")
+    @PutMapping("/{id}/player")
     public ResponseEntity<HttpStatus> addPlayer(@PathVariable("id") Long id,
                                                 @RequestBody String playerName,
                                                 BindingResult bindingResult) {
@@ -62,18 +63,17 @@ public class ClubController {
             throw new DataNotCreatedException(ValidationErrMessage.createValidationErrMessage(bindingResult));
         }
         clubService.addExistPlayer(id, playerName);
-        return ResponseEntity.ok(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("/{id}/remove")
+    @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> remove(@PathVariable("id") Long id) {
         clubService.removeClub(id);
-        return ResponseEntity.ok(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping("/get-expensive")
+    @GetMapping("/expensive")
     public ResponseEntity<ClubDTO> getExpensivePlayers() {
         return ResponseEntity.ok(clubMapper.mapToDTO(clubService.getMostExpensiveClub()));
     }
-
 }

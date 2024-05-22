@@ -18,78 +18,78 @@ import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/player")
+@RequestMapping("/api/v1/players")
 public class PlayerController {
     private PlayerService playerService;
     private PlayerMapper playerMapper;
 
-    @GetMapping("/get-name/{name}")
-    public ResponseEntity<PlayerDTO> findById(@PathVariable("name") String name) {
+    @GetMapping("/name/{name}")
+    public ResponseEntity<PlayerDTO> findByName(@PathVariable("name") String name) {
         return ResponseEntity.ok(playerMapper.mapToDTO(playerService.findByName(name)));
     }
 
-    @GetMapping("/get-all")
+    @GetMapping("")
     public ResponseEntity<List<PlayerDTO>> findAll() {
         return ResponseEntity.ok(
                 playerService.getPlayers().stream().map(playerMapper::mapToDTO).collect(Collectors.toList())
         );
     }
 
-    @GetMapping("/get-id/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<PlayerDTO> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(playerMapper.mapToDTO(playerService.findById(id)));
     }
 
-    @GetMapping("/get-all-id")
+    @GetMapping("/with-id")
     public ResponseEntity<List<Player>> getAllWithId() {
         return ResponseEntity.ok(playerService.getPlayers());
     }
 
-    @PostMapping("/new")
+    @PostMapping("")
     public ResponseEntity<HttpStatus> create(@RequestBody @Valid PlayerDTO playerDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new DataNotCreatedException(ValidationErrMessage.createValidationErrMessage(bindingResult));
         }
         playerService.savePlayer(playerMapper.mapFromDTO(playerDTO));
-        return ResponseEntity.ok(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}/update")
-    private ResponseEntity<HttpStatus> update(@PathVariable("id") Long id,
+    @PutMapping("/{id}")
+    public ResponseEntity<HttpStatus> update(@PathVariable("id") Long id,
                                               @RequestBody @Valid PlayerDTO playerDto,
                                               BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new DataNotCreatedException(ValidationErrMessage.createValidationErrMessage(bindingResult));
         }
         playerService.update(id, playerMapper.mapFromDTO(playerDto));
-        return ResponseEntity.ok(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping("/{id}/add-club")
-    private ResponseEntity<HttpStatus> addClub(@PathVariable("id") Long id,
+    @PutMapping("/{id}/club")
+    public ResponseEntity<HttpStatus> addClub(@PathVariable("id") Long id,
                                                @RequestBody String clubName,
                                                BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new DataNotCreatedException(ValidationErrMessage.createValidationErrMessage(bindingResult));
         }
         playerService.addExistClub(id, clubName);
-        return ResponseEntity.ok(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping("/{id}/add-brand")
-    private ResponseEntity<HttpStatus> addBrand(@PathVariable("id") Long id,
+    @PutMapping("/{id}/brand")
+    public ResponseEntity<HttpStatus> addBrand(@PathVariable("id") Long id,
                                                 @RequestBody String brandName,
                                                 BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new DataNotCreatedException(ValidationErrMessage.createValidationErrMessage(bindingResult));
         }
         playerService.addExistBrand(id, brandName);
-        return ResponseEntity.ok(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("/{id}/remove")
-    private ResponseEntity<HttpStatus> remove(@PathVariable("id") Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> remove(@PathVariable("id") Long id) {
         playerService.removePlayer(id);
-        return ResponseEntity.ok(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
