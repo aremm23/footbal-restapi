@@ -16,7 +16,7 @@ import java.util.List;
 @Entity
 @Data
 @Builder
-@Table(name = "user")
+@Table(name = "my_user")
 @NoArgsConstructor
 @AllArgsConstructor
 public class MyUser implements UserDetails {
@@ -31,14 +31,17 @@ public class MyUser implements UserDetails {
     @Column(name = "username")
     private String username;
 
+    @Column(name = "firstname")
+    private String firstname;
+
+    @Column(name = "lastname")
+    private String lastname;
+
     @Column(name = "created_at")
     private LocalDateTime created;
 
     @Column(name = "updated_at")
     private LocalDateTime updated;
-
-    @Column(name = "created_who")
-    private String createdWho;
 
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
