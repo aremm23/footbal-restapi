@@ -1,6 +1,5 @@
 package by.artsem.footballrestapi.exceptions;
 
-import jakarta.validation.constraints.Null;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,6 +16,7 @@ public class CustomExceptionHandler {
                 LocalDateTime.now());
         return new ResponseEntity<>(ErrorResponse, HttpStatus.BAD_REQUEST);
     }
+
     @ExceptionHandler
     private ResponseEntity<ErrorResponse> handlerException(DataNotFoundedException e) {
         ErrorResponse ErrorResponse = new ErrorResponse(

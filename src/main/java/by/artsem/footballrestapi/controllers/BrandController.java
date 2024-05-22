@@ -83,6 +83,4 @@ public class BrandController {
         brandService.removeBrand(id);
         return ResponseEntity.ok(HttpStatus.OK);
     }
-
-
 }
