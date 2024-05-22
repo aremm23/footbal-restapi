@@ -3,7 +3,6 @@ package by.artsem.footballrestapi.security.service;
 import by.artsem.footballrestapi.exceptions.DataNotCreatedException;
 import by.artsem.footballrestapi.exceptions.DataNotFoundedException;
 import by.artsem.footballrestapi.security.model.MyUser;
-import by.artsem.footballrestapi.security.model.Role;
 import by.artsem.footballrestapi.security.model.dto.AuthenticationRequest;
 import by.artsem.footballrestapi.security.model.dto.AuthenticationResponse;
 import by.artsem.footballrestapi.security.model.dto.RegisterRequest;
@@ -34,7 +33,7 @@ public class AuthenticationService {
                 .lastname(request.getLastname())
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.USER)
+                .role(request.getRole())
                 .created(LocalDateTime.now())
                 .updated(LocalDateTime.now())
                 .build();
