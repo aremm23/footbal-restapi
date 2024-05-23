@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
@@ -20,7 +21,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableMethodSecurity
 public class SecurityConfig {
     private static final String[] WHITE_LIST_URL = {
-            "/user/**",
+            "/api/v1/users/**"
     };
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
@@ -32,6 +33,15 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req ->
                         req.requestMatchers(WHITE_LIST_URL)
                                 .permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/api/v1/**", "GET"))
+                                .hasAnyRole("ADMIN", "USER")
+                                .requestMatchers(new AntPathRequestMatcher("/api/v1/**", "PUT"))
+                                .hasRole("ADMIN")
+                                .requestMatchers(new AntPathRequestMatcher("/api/v1/**", "PATCH"))
+                                .hasRole("ADMIN")
+                                .requestMatchers(new AntPathRequestMatcher("/api/v1/**", "DELETE"))
+                                .hasRole("ADMIN")
+                                .requestMatchers("/api/v1/util").hasRole("ADMIN")
                                 .anyRequest()
                                 .authenticated()
                 )

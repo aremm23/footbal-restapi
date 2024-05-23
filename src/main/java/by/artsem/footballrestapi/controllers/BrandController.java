@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 public class BrandController {
 
     private BrandService brandService;
+
     private BrandMapper brandMapper;
 
     @GetMapping("")
@@ -58,8 +59,8 @@ public class BrandController {
 
     @PutMapping("/{id}/name")
     public ResponseEntity<HttpStatus> update(@PathVariable("id") Long id,
-                                              @RequestBody @Valid BrandDTO brandDto,
-                                              BindingResult bindingResult) {
+                                             @RequestBody @Valid BrandDTO brandDto,
+                                             BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new DataNotCreatedException(ValidationErrMessage.createValidationErrMessage(bindingResult));
         }
@@ -69,8 +70,8 @@ public class BrandController {
 
     @PutMapping("/{id}/player")
     public ResponseEntity<HttpStatus> addPlayer(@PathVariable("id") Long id,
-                                                 @RequestBody String playerName,
-                                                 BindingResult bindingResult) {
+                                                @RequestBody String playerName,
+                                                BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new DataNotCreatedException(ValidationErrMessage.createValidationErrMessage(bindingResult));
         }
