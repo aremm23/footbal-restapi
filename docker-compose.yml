@@ -1,0 +1,34 @@
+version: '2'
+
+services:
+  app:
+    build:
+      context: .
+    image: 'docker-football-restapi:latest'
+    container_name: football-restapi
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    env_file:
+      - .env
+    networks:
+      - api_network
+
+  db:
+    image: 'postgres:16.1'
+    container_name: api-db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=${POSTGRES_USERNAME}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    networks:
+      - api_network
+    volumes:
+      - ./init-db/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+networks:
+  api_network:
+    driver: bridge
