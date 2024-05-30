@@ -1,11 +1,11 @@
 package by.artsem.footballrestapi.models;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +17,7 @@ import java.util.List;
 @Entity
 @Table(name = "club")
 @NoArgsConstructor
-public class Club {
+public class Club implements Serializable {
     @Id
     @SequenceGenerator(name = "clubIdSeqGen", sequenceName = "club_id_seq", allocationSize = 1)
     @GeneratedValue(generator = "clubIdSeqGen")
@@ -28,7 +28,7 @@ public class Club {
     private String name;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "club")
+    @OneToMany(mappedBy = "club", fetch = FetchType.EAGER)
     private List<Player> players;
 
     public void addPlayer(Player player) {

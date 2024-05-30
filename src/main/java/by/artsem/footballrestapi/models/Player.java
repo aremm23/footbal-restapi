@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +19,7 @@ import java.util.List;
 @Table(name = "player")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Player {
+public class Player implements Serializable {
     @Id
     @SequenceGenerator(name = "playerIdSeqGen", sequenceName = "player_id_seq", allocationSize = 1)
     @GeneratedValue(generator = "playerIdSeqGen")
@@ -38,7 +39,7 @@ public class Player {
     @JoinColumn(name = "club_id")
     private Club club;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JsonIgnore
     @JoinTable(
             name = "player_brand",

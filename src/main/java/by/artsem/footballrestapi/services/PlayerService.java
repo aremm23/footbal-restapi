@@ -7,6 +7,10 @@ import by.artsem.footballrestapi.models.Club;
 import by.artsem.footballrestapi.models.Player;
 import by.artsem.footballrestapi.repository.PlayerRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +35,7 @@ public class PlayerService {
         playerRepository.save(player);
     }
 
+    @CacheEvict(value = "UsersService::getUserById", key = "#id")
     @Transactional
     public void removePlayer(Long id) {
         if (!playerRepository.existsById(id)) {
@@ -43,18 +48,26 @@ public class PlayerService {
         return playerRepository.findAll();
     }
 
+    @Cacheable(value = "PlayerService::findById", key = "#id")
     public Player findById(Long id) {
         return playerRepository.findById(id).orElseThrow(() ->
                 new DataNotFoundedException("Player with id " + id + " not founded")
         );
     }
 
+    @Cacheable(value = "PlayerService::findByName", key = "#name")
     public Player findByName(String name) {
         return playerRepository.findByName(name).orElseThrow(() ->
                 new DataNotFoundedException("Player with name " + name + " not founded")
         );
     }
 
+    @Caching(
+        put = {
+                @CachePut(value = "PlayerService::findById", key = "#id"),
+                @CachePut(value = "PlayerService::findByName", key = "#playerRepository.findById(id).get().name"),
+        }
+    )
     @Transactional
     public void update(Long id, Player updatedPlayer) {
         Player player = playerRepository.findById(id).orElseThrow(() ->

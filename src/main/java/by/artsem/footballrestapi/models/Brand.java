@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +17,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Brand {
+public class Brand implements Serializable {
     @Id
     @SequenceGenerator(name = "brandIdSeqGen", sequenceName = "brand_id_seq", allocationSize = 1)
     @GeneratedValue(generator = "brandIdSeqGen")
@@ -27,7 +28,7 @@ public class Brand {
     private String name;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "brands")
+    @ManyToMany(mappedBy = "brands", fetch = FetchType.EAGER)
     private List<Player> players;
 
     public void addPlayer(Player player) {

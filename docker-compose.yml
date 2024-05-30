@@ -1,5 +1,9 @@
 version: '2'
 
+volumes:
+  cache:
+    driver: local
+
 services:
   app:
     build:
@@ -28,6 +32,17 @@ services:
       - api_network
     volumes:
       - ./init-db/init.sql:/docker-entrypoint-initdb.d/init.sql
+  redis:
+    image: 'redis:latest'
+    restart: always
+    container_name: redis
+    ports:
+      - "6379:6379"
+    command: redis-server --save 20 1 --loglevel notice --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - cache:/data
+    networks:
+      - api_network
 
 networks:
   api_network:
